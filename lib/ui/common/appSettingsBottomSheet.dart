@@ -48,7 +48,7 @@ class AppSettingsBottomSheet extends StatelessWidget {
         Text(
           text,
           style: TextStyle(
-            color: selected ? Colors.brown.shade500 : Colors.black,
+            color: selected ? Colors.blue : Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.w600,
             fontStyle: FontStyle.normal,

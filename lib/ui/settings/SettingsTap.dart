@@ -17,7 +17,7 @@ class _SettingsTabState extends State<SettingsTab> {
     LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+      padding: const EdgeInsets.symmetric(horizontal: 18.0,vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,11 +33,11 @@ class _SettingsTabState extends State<SettingsTab> {
               showLanguageBottomSheet(context);
             },
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+              padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(width: 2, color: Colors.orange.shade700),
+                border: Border.all(width: 2, color: Colors.blue),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(12),
               ),
