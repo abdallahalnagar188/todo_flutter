@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo_flutter/ui/listOfTodos/TasksListTap.dart';
-
-import '../settings/SettingsTap.dart';
+import 'package:todo_flutter/ui/listOfTodos/task_list_tap.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../settings/settings_tap.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routName = "home_screen";
@@ -14,10 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int newSelectedIndex = 0;
-  var taps = [
-    TaskslistTap(),
-    SettingsTab()
-  ];
+  var taps = [TaskslistTap(), SettingsTab()];
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +42,13 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           backgroundColor: Colors.transparent,
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: "List"),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list),
+              label: AppLocalizations.of(context)!.listsTasksTap,
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
-              label: "Settings",
+              label: AppLocalizations.of(context)!.settingsTap,
             ),
           ],
         ),

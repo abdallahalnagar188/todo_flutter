@@ -69,7 +69,7 @@ class TaskItem extends StatelessWidget {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(Icons.check_rounded, color: Colors.white, size: 32),
+                  child: Icon(Icons.check_rounded, color: Colors.white, size: 28)
                 ),
               ],
             ),

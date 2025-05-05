@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/LanguageProvider.dart';
+import '../providers/language_provider.dart';
 
 class AppSettingsBottomSheet extends StatelessWidget {
   const AppSettingsBottomSheet({super.key});

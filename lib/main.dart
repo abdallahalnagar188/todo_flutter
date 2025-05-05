@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_flutter/ui/home/home_screen.dart';
-import 'package:todo_flutter/ui/providers/LanguageProvider.dart';
+import 'package:todo_flutter/ui/providers/language_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:todo_flutter/ui/register/register_screen.dart';
 
 void main() {
   runApp(
@@ -37,8 +38,11 @@ class MyApp extends StatelessWidget {
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      routes: {HomeScreen.routName: (_) => HomeScreen()},
-      initialRoute: HomeScreen.routName,
+      routes: {
+        HomeScreen.routName: (_) => HomeScreen(),
+        RegisterScreen.routName:(_) => RegisterScreen()
+      },
+      initialRoute: RegisterScreen.routName,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale:Locale( languageProvider.currentLocale),
