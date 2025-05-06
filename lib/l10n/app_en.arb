@@ -1,5 +1,18 @@
 {
   "settingsTap": "Settings",
   "language": "Language",
-  "listsTasksTap": "Tasks List"
+  "listsTasksTap": "Tasks List",
+  "fullName": "Ful Name",
+  "email": "Email",
+  "password": "Password",
+  "conformationPassword": "Conformation Password",
+  "singIn": "Sign In",
+  "signUp": "Sign Up",
+  "alreadyHaveAccount": "already have and account ?",
+  "dontHaveAccount": "don't have and account ?",
+  "createAccount": "Create Account!",
+  "fullNameHint": "please enter full name",
+  "emailHint": "please enter email",
+  "passwordHint": "please enter password",
+  "conformationPasswordHint": "please enter conformation password"
 }

@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_flutter/ui/auth/login/login_screen.dart';
+import 'package:todo_flutter/ui/auth/register/register_screen.dart';
 import 'package:todo_flutter/ui/home/home_screen.dart';
 import 'package:todo_flutter/ui/providers/language_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:todo_flutter/ui/register/register_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     ChangeNotifierProvider(
       create: (BuildContext context) {
@@ -40,9 +47,10 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         HomeScreen.routName: (_) => HomeScreen(),
-        RegisterScreen.routName:(_) => RegisterScreen()
+        RegisterScreen.routName:(_) => RegisterScreen(),
+        LoginScreen.routName:(_) => LoginScreen(),
       },
-      initialRoute: RegisterScreen.routName,
+      initialRoute: LoginScreen.routName,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale:Locale( languageProvider.currentLocale),

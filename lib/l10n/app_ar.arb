@@ -1,6 +1,18 @@
 {
   "settingsTap": "الاعدادات",
   "language": "اللغه",
-  "listsTasksTap": "المهام"
-
+  "listsTasksTap": "المهام",
+  "fullName": "الاسم كامل",
+  "email": "البريد",
+  "password": "كلمة المرور",
+  "conformationPassword": "تاكيد كلمة المرور",
+  "singIn": "تسجيل الدخول",
+  "signUp": "انشاء حساب",
+  "alreadyHaveAccount": "بالفعل لديك حساب ؟",
+  "dontHaveAccount": "ليس لديك حساب ؟",
+  "createAccount": "انشاء حساب",
+  "fullNameHint": "من فضلك اكتب الاسم هنا",
+  "emailHint": "من فضلك اكتب البريد هنا",
+  "passwordHint": "من فضلك اكتب كلمة المرور هنا",
+  "conformationPasswordHint": "من فضلك اكتب كلمة المرور هنا"
 }
