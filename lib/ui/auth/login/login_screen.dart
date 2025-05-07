@@ -1,15 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_flutter/ui/auth/register/register_screen.dart';
 import 'package:todo_flutter/ui/common/app_form_field.dart';
+import 'package:todo_flutter/ui/common/dialog_utils.dart';
 import 'package:todo_flutter/ui/them/todo_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../common/app_utils.dart';
+import '../../home/home_screen.dart';
+import '../../providers/auth_provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static String routName = "login_screen";
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email = TextEditingController();
+
   TextEditingController password = TextEditingController();
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -65,10 +77,10 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      register();
+                      login();
                     },
                     child: Text(
-                      AppLocalizations.of(context)!.signUp,
+                      AppLocalizations.of(context)!.singIn,
                       style: TextStyle(
                         fontSize: 18,
                         color: TodoTheme.appColor,
@@ -114,7 +126,42 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  void register() {
-    formKey.currentState?.validate();
+  void login() {
+    if (formKey.currentState?.validate() == false) {
+      return;
+    }
+    singIn();
+  }
+
+  void singIn() async {
+    var authProvider = Provider.of<AppAuthProvider>(context,listen: false);
+
+    try {
+      showLoading(context);
+      final credential = await authProvider.signInWithEmailAndPassword(email.text, password.text);
+      hideLoading(context);
+      showMessage(
+        context,
+        content: "sing in successful ",
+        posButtonTitle: "ok",
+        posButtonClick: () {
+          Navigator.pushReplacementNamed(context, HomeScreen.routName);
+        },
+      );
+     // print(credential.user!.uid);
+    } on FirebaseAuthException catch (e) {
+      String message = "something was wrong";
+      if (e.code == 'user-not-found') {
+        message = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        message = 'Wrong password provided for that user.';
+      }
+      hideLoading(context);
+      showMessage(context, content: message,posButtonTitle: "ok");
+    } catch (e) {
+      String message = "something was wrong";
+      hideLoading(context);
+      showMessage(context, content: message,posButtonTitle: "ok");
+    }
   }
 }

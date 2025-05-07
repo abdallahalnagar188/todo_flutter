@@ -1,19 +1,32 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_flutter/ui/auth/login/login_screen.dart';
 import 'package:todo_flutter/ui/common/app_form_field.dart';
+import 'package:todo_flutter/ui/common/dialog_utils.dart';
+import 'package:todo_flutter/ui/home/home_screen.dart';
+import 'package:todo_flutter/ui/providers/auth_provider.dart';
 import 'package:todo_flutter/ui/them/todo_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../common/app_utils.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   static String routName = "register_screen";
 
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController fullName = TextEditingController();
+
   TextEditingController email = TextEditingController();
+
   TextEditingController password = TextEditingController();
+
   TextEditingController passwordConformation = TextEditingController();
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -31,11 +44,11 @@ class RegisterScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: 40),
-                  Image.asset(MyImages.routeLogoIv,height:70,width: 100,),
+                  Image.asset(MyImages.routeLogoIv, height: 70, width: 100),
                   SizedBox(height: 40),
 
                   AppFormField(
-                    title:AppLocalizations.of(context)!.fullName,
+                    title: AppLocalizations.of(context)!.fullName,
                     hint: AppLocalizations.of(context)!.fullNameHint,
                     keyboardType: TextInputType.text,
                     validator: (text) {
@@ -76,12 +89,15 @@ class RegisterScreen extends StatelessWidget {
                   SizedBox(height: 28),
                   AppFormField(
                     title: AppLocalizations.of(context)!.conformationPassword,
-                    hint:AppLocalizations.of(context)!.conformationPasswordHint,
+                    hint:
+                        AppLocalizations.of(context)!.conformationPasswordHint,
                     keyboardType: TextInputType.text,
                     sceuredPassword: true,
                     validator: (text) {
                       if (text?.trim().isEmpty == true) {
-                        return AppLocalizations.of(context)!.conformationPasswordHint;
+                        return AppLocalizations.of(
+                          context,
+                        )!.conformationPasswordHint;
                       }
                       if (password.text != text) {
                         return "Please enter the correct password";
@@ -110,7 +126,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 12,),
+                  SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
 
@@ -150,27 +166,42 @@ class RegisterScreen extends StatelessWidget {
   }
 
   void register() {
-    if(formKey.currentState?.validate() == false){
+    if (formKey.currentState?.validate() == false) {
       return;
     }
     createAccount();
   }
 
-  void createAccount() async{
+  void createAccount() async {
+    var authProvider = Provider.of<AppAuthProvider>(context,listen: false);
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email.text,
-        password: password.text,
+      showLoading(context);
+      final credential =await authProvider.createUserWithEmailAndPassword(
+        email.text,
+        password.text,
       );
-      print(credential.user!.email);
+      hideLoading(context);
+      showMessage(
+        context,
+        content: "Account Created successful ",
+        posButtonTitle: "ok",
+        posButtonClick: () {
+          Navigator.pushReplacementNamed(context, HomeScreen.routName);
+        },
+      );
     } on FirebaseAuthException catch (e) {
+      String message = "something was wrong";
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        message = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        message = 'The account already exists for that email.';
       }
+      hideLoading(context);
+      showMessage(context, content: message, posButtonTitle: "ok");
     } catch (e) {
-      print("the error is : $e");
+      String message = "something was wrong";
+      hideLoading(context);
+      showMessage(context, content: message, posButtonTitle: "ok");
     }
   }
 }

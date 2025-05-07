@@ -3,21 +3,22 @@ import 'package:provider/provider.dart';
 import 'package:todo_flutter/ui/auth/login/login_screen.dart';
 import 'package:todo_flutter/ui/auth/register/register_screen.dart';
 import 'package:todo_flutter/ui/home/home_screen.dart';
+import 'package:todo_flutter/ui/providers/auth_provider.dart';
 import 'package:todo_flutter/ui/providers/language_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-void main()async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(
-    ChangeNotifierProvider(
-      create: (BuildContext context) {
-        return LanguageProvider();
-      },
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        ChangeNotifierProvider(create: (_) => AppAuthProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
+    var authProvider = Provider.of<AppAuthProvider>(context);
 
     return MaterialApp(
       theme: ThemeData(
@@ -47,13 +49,16 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         HomeScreen.routName: (_) => HomeScreen(),
-        RegisterScreen.routName:(_) => RegisterScreen(),
-        LoginScreen.routName:(_) => LoginScreen(),
+        RegisterScreen.routName: (_) => RegisterScreen(),
+        LoginScreen.routName: (_) => LoginScreen(),
       },
-      initialRoute: LoginScreen.routName,
+      initialRoute:
+          authProvider.isLoggedIn()
+              ? HomeScreen.routName
+              : LoginScreen.routName,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale:Locale( languageProvider.currentLocale),
+      locale: Locale(languageProvider.currentLocale),
     );
   }
 }
