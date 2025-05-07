@@ -5,10 +5,10 @@ import 'package:todo_flutter/ui/auth/login/login_screen.dart';
 import 'package:todo_flutter/ui/common/app_form_field.dart';
 import 'package:todo_flutter/ui/common/dialog_utils.dart';
 import 'package:todo_flutter/ui/home/home_screen.dart';
-import 'package:todo_flutter/ui/providers/auth_provider.dart';
 import 'package:todo_flutter/ui/them/todo_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../providers/auth_provider.dart';
 import '../../common/app_utils.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -173,14 +173,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void createAccount() async {
-    var authProvider = Provider.of<AppAuthProvider>(context,listen: false);
+    var authProvider = Provider.of<AppAuthProvider>(context, listen: false);
     try {
       showLoading(context);
-      final credential =await authProvider.createUserWithEmailAndPassword(
+      final appUser = await authProvider.createUserWithEmailAndPassword(
         email.text,
         password.text,
+        fullName.text,
       );
       hideLoading(context);
+      if (appUser == null) {
+        showMessage(
+          context,
+          content: "somthing was wrong ",
+          posButtonTitle: "try agan",
+          posButtonClick: () {
+            createAccount();
+          },
+        );
+        return;
+      }
       showMessage(
         context,
         content: "Account Created successful ",

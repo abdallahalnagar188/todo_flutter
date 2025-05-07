@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_flutter/providers/auth_provider.dart';
+import 'package:todo_flutter/providers/language_provider.dart';
 import 'package:todo_flutter/ui/auth/login/login_screen.dart';
 import 'package:todo_flutter/ui/auth/register/register_screen.dart';
 import 'package:todo_flutter/ui/home/home_screen.dart';
-import 'package:todo_flutter/ui/providers/auth_provider.dart';
-import 'package:todo_flutter/ui/providers/language_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
     var authProvider = Provider.of<AppAuthProvider>(context);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: false,
         bottomNavigationBarTheme: BottomNavigationBarThemeData(

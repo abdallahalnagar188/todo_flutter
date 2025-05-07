@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_flutter/ui/auth/login/login_screen.dart';
+import 'package:todo_flutter/ui/common/dialog_utils.dart';
 import 'package:todo_flutter/ui/listOfTodos/task_list_tap.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../providers/auth_provider.dart';
+import '../common/add_task_bottom_sheet.dart';
 import '../settings/settings_tap.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,15 +23,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<AppAuthProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(title: Text("Todo App")),
+      appBar: AppBar(
+        title: Text("Welcome ${authProvider.appUser!.fullName}"),
+        actions: [
+          InkWell(
+            onTap: () {
+              showMessage(
+                context,
+                content: "Do You need to Log out ?",
+                posButtonTitle: "Ok",
+                posButtonClick: () {
+                  authProvider.logout();
+                  Navigator.pushReplacementNamed(context, LoginScreen.routName);
+                },
+                negButtonTitle: "No",
+                negButtonClick: () {
+                },
+              );
+            },
+            child: Icon(Icons.logout),
+          ),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       backgroundColor: Colors.green.shade100,
       floatingActionButton: FloatingActionButton(
         shape: StadiumBorder(side: BorderSide(color: Colors.white, width: 2)),
         elevation: 10,
-        onPressed: () {},
+        onPressed: () {
+          showAddTaskBottomSheet();
+        },
         backgroundColor: Colors.blue,
         child: Icon(Icons.add, color: Colors.white),
       ),
@@ -55,5 +85,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: taps[newSelectedIndex],
     );
+  }
+
+  void showAddTaskBottomSheet() {
+
+    showModalBottomSheet(context: context, builder: (_) {
+      return AddTaskBottomSheet();
+    },backgroundColor: Colors.transparent);
   }
 }

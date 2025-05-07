@@ -6,9 +6,9 @@ import 'package:todo_flutter/ui/common/app_form_field.dart';
 import 'package:todo_flutter/ui/common/dialog_utils.dart';
 import 'package:todo_flutter/ui/them/todo_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../providers/auth_provider.dart';
 import '../../common/app_utils.dart';
 import '../../home/home_screen.dart';
-import '../../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static String routName = "login_screen";
@@ -138,8 +138,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       showLoading(context);
-      final credential = await authProvider.signInWithEmailAndPassword(email.text, password.text);
+      final appUser = await authProvider.signInWithEmailAndPassword(email.text, password.text);
       hideLoading(context);
+      if(appUser == null){
+        showMessage(
+          context,
+          content: "Something was wrong ",
+          posButtonTitle: "try again",
+          posButtonClick: () {
+           singIn();
+          },
+        );
+        return;
+      }
       showMessage(
         context,
         content: "sing in successful ",
