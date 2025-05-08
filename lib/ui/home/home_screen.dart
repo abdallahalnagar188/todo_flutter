@@ -25,6 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var authProvider = Provider.of<AppAuthProvider>(context);
 
+    if (authProvider.appUser == null) {
+      // Optional: you could trigger a fetch or just show a placeholder
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("Welcome ${authProvider.appUser!.fullName??  " "}"),

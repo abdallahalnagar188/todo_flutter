@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_flutter/AppDateUtils.dart';
+import 'package:todo_flutter/db/collections/tasks_collection.dart';
+import 'package:todo_flutter/db/models/task.dart';
+import 'package:todo_flutter/providers/auth_provider.dart';
 import 'package:todo_flutter/ui/common/add_task_form_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:todo_flutter/ui/common/dialog_utils.dart';
-
 
 class AddTaskBottomSheet extends StatefulWidget {
   const AddTaskBottomSheet({super.key});
@@ -61,7 +65,9 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                 hint: AppLocalizations.of(context)!.enterYourTaskDiscretion,
                 validator: (text) {
                   if (text == null || text.trim().isEmpty) {
-                    return AppLocalizations.of(context)!.enterYourTaskDiscretion;
+                    return AppLocalizations.of(
+                      context,
+                    )!.enterYourTaskDiscretion;
                   }
                   return null;
                 },
@@ -124,7 +130,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                   ),
                 ],
               ),
-              SizedBox(height: 60),
+              SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
@@ -186,9 +192,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     }
   }
 
-  void addTask() {
+  bool isValidateTask() {
+    bool isValid = true;
     if (formKey.currentState?.validate() == false) {
-      return;
+      isValid = false;
     }
     if (selectedDate == null) {
       showMessage(
@@ -196,7 +203,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         content: "please enter valid date",
         posButtonTitle: "ok",
       );
-      return;
+      isValid = false;
     }
     if (selectedTime == null) {
       showMessage(
@@ -204,7 +211,37 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         content: "please enter valid time",
         posButtonTitle: "ok",
       );
-      return;
+      isValid = false;
+    }
+    return isValid;
+  }
+
+  void addTask() async {
+    var task = Task(
+      title: title.text,
+      description: description.text,
+      date: selectedDate!.dateOnly(),
+      time: selectedTime!.timeOnly(),
+    );
+    if (isValidateTask() == false) return;
+    var authProvider = Provider.of<AppAuthProvider>(context,listen: false);
+    var userId = authProvider.appUser!.authId ?? "";
+    TasksCollection tasksCollection = TasksCollection();
+    try {
+      showLoading(context);
+      var result = tasksCollection.createTask(userId, task);
+      hideLoading(context);
+      showMessage(
+        context,
+        content: "Task Added Successful",
+        posButtonTitle: "ok",
+        posButtonClick: () {
+          Navigator.pop(context);
+        },
+      );
+    } catch (e) {
+      hideLoading(context);
+      showMessage(context, content: e.toString(), posButtonTitle: "ok");
     }
   }
 }

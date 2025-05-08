@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo_flutter/db/models/task.dart';
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({super.key});
+  var task = Task();
+   TaskItem({required this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class TaskItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "The First Task",
+                       task.title??"",
                         style: TextStyle(
                           color: Colors.blue,
                           fontSize: 18,
@@ -56,7 +58,7 @@ class TaskItem extends StatelessWidget {
                       Row(
                         children: [
                           Icon(Icons.timer_outlined),
-                          Text("10:30 AM", textAlign: TextAlign.start),
+                          Text("${task.time}", textAlign: TextAlign.start),
                         ],
                       ),
                     ],
