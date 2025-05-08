@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Welcome ${authProvider.appUser!.fullName}"),
+        title: Text("Welcome ${authProvider.appUser!.fullName??  " "}"),
         actions: [
           InkWell(
             onTap: () {

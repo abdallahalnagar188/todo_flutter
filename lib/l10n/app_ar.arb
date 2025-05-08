@@ -14,5 +14,13 @@
   "fullNameHint": "من فضلك اكتب الاسم هنا",
   "emailHint": "من فضلك اكتب البريد هنا",
   "passwordHint": "من فضلك اكتب كلمة المرور هنا",
-  "conformationPasswordHint": "من فضلك اكتب كلمة المرور هنا"
+  "conformationPasswordHint": "من فضلك اكتب كلمة المرور هنا",
+  "addTask": "اضافه مهمه",
+  "addNewTask": "اضافة مهمه جديده",
+  "enterYourTaskTitle": "اكتب عنوان المهمه",
+  "enterYourTaskDiscretion": "اكتب محتوا المهمه",
+  "taskDate": "تاريخ المهه",
+  "selectDate": "اختبار تاريخ",
+  "taskTime": "وقت المهه",
+  "selectTime": "اختيار وقت"
 }

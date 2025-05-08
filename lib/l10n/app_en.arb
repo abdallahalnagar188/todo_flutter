@@ -14,5 +14,13 @@
   "fullNameHint": "please enter full name",
   "emailHint": "please enter email",
   "passwordHint": "please enter password",
-  "conformationPasswordHint": "please enter conformation password"
+  "conformationPasswordHint": "please enter conformation password",
+  "addTask": "Add Task",
+  "addNewTask": "Add New Task",
+  "enterYourTaskTitle": "enter your task title",
+  "enterYourTaskDiscretion": "enter your discretion",
+  "taskDate": "Task Date",
+  "selectDate": "select date",
+  "taskTime": "Task Time",
+  "selectTime": "select Time"
 }
