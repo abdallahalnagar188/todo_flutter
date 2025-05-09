@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/AppDateUtils.dart';
 import 'package:todo_flutter/db/collections/tasks_collection.dart';
 
 import '../db/models/task.dart';
@@ -6,8 +7,8 @@ import '../db/models/task.dart';
 class TasksProvider extends ChangeNotifier {
   var tasksCollection = TasksCollection();
 
-  Future<List<Task>> getAllTasks(String userId) async {
-    var tasksList = await tasksCollection.getAllTasks(userId);
+  Future<List<Task>> getAllTasks(String userId,DateTime selectedDate ) async {
+    var tasksList = await tasksCollection.getAllTasks(userId,selectedDate.dateOnly());
     return tasksList;
   }
 
@@ -22,4 +23,10 @@ class TasksProvider extends ChangeNotifier {
     notifyListeners();
     return;
   }
+
+  Future<void> toDone(String userId, String taskId, bool isDone) async {
+    await tasksCollection.markTaskAsDone(userId, taskId, isDone);
+    notifyListeners();
+  }
+
 }

@@ -5,15 +5,24 @@ import 'package:todo_flutter/AppDateUtils.dart';
 import 'package:todo_flutter/ui/common/dialog_utils.dart';
 
 typedef OnTaskDeleteClick = void Function(Task task);
+typedef OnTaskIsDoneClick = void Function(Task task);
 
 class TaskItem extends StatelessWidget {
   var task = Task();
   OnTaskDeleteClick onTaskDeleteClick;
+  OnTaskIsDoneClick onTaskIsDoneClick;
 
-  TaskItem({super.key, required this.task, required this.onTaskDeleteClick});
+  TaskItem({
+    super.key,
+    required this.task,
+    required this.onTaskDeleteClick,
+    required this.onTaskIsDoneClick,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final Color taskColor = task.isDone == true ? Colors.green : Colors.blue;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Slidable(
@@ -24,12 +33,12 @@ class TaskItem extends StatelessWidget {
               onPressed: (_) {
                 showMessage(
                   context,
-                  content: "are you sure to delete this task ?",
-                  posButtonTitle: "confirm",
+                  content: "Are you sure you want to delete this task?",
+                  posButtonTitle: "Confirm",
                   posButtonClick: () {
                     onTaskDeleteClick(task);
                   },
-                  negButtonTitle: "cancel",
+                  negButtonTitle: "Cancel",
                 );
               },
               backgroundColor: Colors.red,
@@ -55,7 +64,7 @@ class TaskItem extends StatelessWidget {
                 Container(
                   width: 4,
                   height: 66,
-                  decoration: BoxDecoration(color: Colors.blue),
+                  decoration: BoxDecoration(color: taskColor),
                 ),
                 SizedBox(width: 18),
                 Expanded(
@@ -66,16 +75,16 @@ class TaskItem extends StatelessWidget {
                       Text(
                         task.title ?? "",
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: taskColor,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Divider(height: 8),
-
                       Row(
                         children: [
-                          Icon(Icons.timer_outlined),
+                          Icon(Icons.timer_outlined, color: taskColor),
+                          SizedBox(width: 4),
                           Text(
                             "${task.time?.formatTime()}",
                             textAlign: TextAlign.start,
@@ -86,16 +95,21 @@ class TaskItem extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 18),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.check_rounded,
-                    color: Colors.white,
-                    size: 28,
+                InkWell(
+                  onTap: () {
+                    onTaskIsDoneClick(task);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: taskColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.check_rounded,
+                      color: Colors.white,
+                      size: 28,
+                    ),
                   ),
                 ),
               ],
@@ -105,4 +119,5 @@ class TaskItem extends StatelessWidget {
       ),
     );
   }
+
 }

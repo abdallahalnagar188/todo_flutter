@@ -25,14 +25,24 @@ class TasksCollection {
     return docRef.set(task);
   }
 
-  Future<List<Task>> getAllTasks(String userId) async {
-    var querySnapshot = await getTasksCollection(userId).get();
-    var taskList =querySnapshot.docs.map((e) => e.data()).toList();
+  Future<List<Task>> getAllTasks(String userId, int selectedDate) async {
+    var querySnapshot =
+        await getTasksCollection(userId)
+            .where("date", isEqualTo: selectedDate)
+            .orderBy("time", descending: false)
+            .get();
+    var taskList = querySnapshot.docs.map((e) => e.data()).toList();
     return taskList;
   }
 
-  Future<void> removeTask(String userId, Task task){
-      var docRef = getTasksCollection(userId).doc(task.id);
-      return docRef.delete();
+  Future<void> removeTask(String userId, Task task) {
+    var docRef = getTasksCollection(userId).doc(task.id);
+    return docRef.delete();
   }
+
+  Future<void> markTaskAsDone(String userId, String taskId, bool isDone) async {
+    var docRef = getTasksCollection(userId).doc(taskId);
+    await docRef.update({'isDone': isDone});
+  }
+
 }
