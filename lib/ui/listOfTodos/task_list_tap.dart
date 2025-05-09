@@ -1,37 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_flutter/db/collections/tasks_collection.dart';
 import 'package:todo_flutter/providers/auth_provider.dart';
+import 'package:todo_flutter/providers/tasks_provider.dart';
+import 'package:todo_flutter/ui/common/dialog_utils.dart';
 import 'package:todo_flutter/ui/listOfTodos/task_item.dart';
 
 import '../../db/models/task.dart';
 
-class TaskslistTap extends StatefulWidget {
-  const TaskslistTap({super.key});
+class TasksListTap extends StatefulWidget {
+  const TasksListTap({super.key});
 
   @override
-  State<TaskslistTap> createState() => _TaskslistTapState();
+  State<TasksListTap> createState() => _TasksListTapState();
 }
 
-class _TaskslistTapState extends State<TaskslistTap> {
-  late Future<List<Task>> _tasksFuture;
-
+class _TasksListTapState extends State<TasksListTap> {
   @override
   void initState() {
     super.initState();
-    _tasksFuture = _fetchTasks();
+    _fetchTasks();
   }
 
-  Future<List<Task>> _fetchTasks() async {
-    final authProvider = Provider.of<AppAuthProvider>(context, listen: false);
-    final userId = authProvider.firebaseUser?.uid ?? "";
-    return await TasksCollection().getAllTasks(userId);
+  Future<void> _fetchTasks() async {
+    var authProvider = Provider.of<AppAuthProvider>(context, listen: false);
+    var tasksProvider = Provider.of<TasksProvider>(context, listen: false);
+    var userId = authProvider.firebaseUser?.uid ?? "";
+    await tasksProvider.getAllTasks(userId);
   }
 
   @override
   Widget build(BuildContext context) {
+    var tasksProvider = Provider.of<TasksProvider>(context);
+    var authProvider = Provider.of<AppAuthProvider>(context);
+    var userId = authProvider.firebaseUser?.uid ?? "";
+
     return FutureBuilder<List<Task>>(
-      future: _tasksFuture,
+      future: tasksProvider.getAllTasks(userId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -45,10 +49,30 @@ class _TaskslistTapState extends State<TaskslistTap> {
         return ListView.builder(
           itemCount: tasks.length,
           itemBuilder: (context, index) {
-            return TaskItem(task: tasks[index]);
+            return TaskItem(task: tasks[index], onTaskDeleteClick: deleteTask);
           },
         );
       },
     );
+  }
+
+  void deleteTask(Task task) async {
+    showLoading(context);
+
+    try {
+      var authProvider = Provider.of<AppAuthProvider>(context, listen: false);
+      var tasksProvider = Provider.of<TasksProvider>(context, listen: false);
+      var userId = authProvider.firebaseUser?.uid ?? "";
+
+      await tasksProvider.deleteTask(userId, task);
+      hideLoading(context);
+    } catch (e) {
+      hideLoading(context);
+      showMessage(
+        context,
+        content: 'Failed to delete task: $e',
+        posButtonTitle: "OK",
+      );
+    }
   }
 }

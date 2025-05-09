@@ -30,4 +30,9 @@ class TasksCollection {
     var taskList =querySnapshot.docs.map((e) => e.data()).toList();
     return taskList;
   }
+
+  Future<void> removeTask(String userId, Task task){
+      var docRef = getTasksCollection(userId).doc(task.id);
+      return docRef.delete();
+  }
 }

@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int newSelectedIndex = 0;
-  var taps = [TaskslistTap(), SettingsTab()];
+  var taps = [TasksListTap(), SettingsTab()];
 
   @override
   Widget build(BuildContext context) {

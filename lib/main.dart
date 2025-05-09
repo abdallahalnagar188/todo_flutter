@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_flutter/providers/auth_provider.dart';
 import 'package:todo_flutter/providers/language_provider.dart';
+import 'package:todo_flutter/providers/tasks_provider.dart';
 import 'package:todo_flutter/ui/auth/login/login_screen.dart';
 import 'package:todo_flutter/ui/auth/register/register_screen.dart';
 import 'package:todo_flutter/ui/home/home_screen.dart';
@@ -18,6 +19,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => AppAuthProvider()),
+        ChangeNotifierProvider(create: (_) => TasksProvider()),
       ],
       child: const MyApp(),
     ),

@@ -4,6 +4,7 @@ import 'package:todo_flutter/AppDateUtils.dart';
 import 'package:todo_flutter/db/collections/tasks_collection.dart';
 import 'package:todo_flutter/db/models/task.dart';
 import 'package:todo_flutter/providers/auth_provider.dart';
+import 'package:todo_flutter/providers/tasks_provider.dart';
 import 'package:todo_flutter/ui/common/add_task_form_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:todo_flutter/ui/common/dialog_utils.dart';
@@ -121,7 +122,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                           child: Text(
                             selectedTime == null
                                 ? AppLocalizations.of(context)!.selectTime
-                                : "${selectedTime?.hour}:${selectedTime?.minute}",
+                                : "${selectedTime?.formatTime()}",
                             style: TextStyle(color: Colors.grey.shade700),
                           ),
                         ),
@@ -217,31 +218,33 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   }
 
   void addTask() async {
+    if (!isValidateTask()) return;
+
     var task = Task(
       title: title.text,
       description: description.text,
       date: selectedDate!.dateOnly(),
       time: selectedTime!.timeOnly(),
     );
-    if (isValidateTask() == false) return;
-    var authProvider = Provider.of<AppAuthProvider>(context,listen: false);
-    var userId = authProvider.appUser!.authId ?? "";
-    TasksCollection tasksCollection = TasksCollection();
+
+    var authProvider = Provider.of<AppAuthProvider>(context, listen: false);
+    var tasksProvider = Provider.of<TasksProvider>(context, listen: false);
+    var userId = authProvider.appUser?.authId ?? "";
+
     try {
       showLoading(context);
-      var result = tasksCollection.createTask(userId, task);
+      await tasksProvider.addTask(userId, task);
+      hideLoading(context);
+      Navigator.pop(context); // Close the bottom sheet
+      // The TasksListTap will automatically refresh because of notifyListeners()
+    } catch (e) {
       hideLoading(context);
       showMessage(
         context,
-        content: "Task Added Successful",
-        posButtonTitle: "ok",
-        posButtonClick: () {
-          Navigator.pop(context);
-        },
+        content: "Failed to add task: $e",
+        posButtonTitle: "OK",
       );
-    } catch (e) {
-      hideLoading(context);
-      showMessage(context, content: e.toString(), posButtonTitle: "ok");
     }
   }
+
 }
