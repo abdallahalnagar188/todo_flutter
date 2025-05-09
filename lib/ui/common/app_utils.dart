@@ -5,4 +5,5 @@ class AppColors{
 }
 class MyImages{
   static const String routeLogoIv = "assets/images/route_logo.png";
+  static const String logo = "assets/images/logo.png";
 }
